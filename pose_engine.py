@@ -25,7 +25,7 @@ import os
 import platform
 import sys
 import time
-
+import cv2
 
 #TODO: Adds support for window and MAC
 EDGETPU_SHARED_LIB = 'libedgetpu.so.1'
@@ -114,9 +114,15 @@ class PoseEngine():
           img: numpy array containing image
         """
         input_details = self._interpreter.get_input_details()
-        image_width, image_height = img.size
-        resized_image = img.resize(
-            (self._input_width, self._input_height), Image.NEAREST)
+        print(img.shape)
+        image_width, image_height, _ = img.shape
+        print(image_width)
+        print(image_height)
+        print(self._input_width)
+        print(self._input_height)
+        resized_image=cv2.resize(img,(self._input_width, self._input_height))
+        #resized_image = img.resize(
+        #    (self._input_width, self._input_height), Image.NEAREST)
         input_data = np.expand_dims(resized_image, axis=0)
         if self._input_type is np.float32:
             # Floating point versions of posenet take image data in [-1,1] range.
